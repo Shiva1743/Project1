@@ -222,7 +222,8 @@ $(document).ready(function(e)
         setInterval(timer, 1000);
     }
 
-    window.onload = function () {
+    window.onload = function (e) {
+        e.preventDefault();
         var fiveMinutes = 60 * min,
             display = document.querySelector('.end_time');
         startTimer(fiveMinutes, display);
