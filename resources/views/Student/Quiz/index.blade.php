@@ -92,6 +92,16 @@
                             </div>
                             @endif
                             <h4 class="card-title mb-4">Questions</h4>
+                            <div style="text-align: right;">
+                                <div><span class="end_time" style="font-size: xxx-large;"></span></div>
+                            </div>
+                            <input type="hidden" class="endtime" name="strt_time" value="{{date('h:i:s',strtotime($time->end_time))}}">
+                            <input type="hidden" class="strt_time" name="strt_time" value="{{date('h:i:s',strtotime($time->time))}}">
+                            <?php 
+                            $counter =  (date('H:i:s',strtotime($time->end_time)-strtotime($time->time)));
+                            
+                            ?>
+                            <input type="hidden" name="countertime" class="countertime" value="{{$counter}}">
                             <form action="{{route('submitQuiz')}}" method="post" id="quizform">
                                 @csrf
                             @foreach($quizList as $k=>$Value)
@@ -169,52 +179,54 @@
 <!-- Mirrored from themesbrand.com/skote-django/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Jun 2021 11:18:48 GMT -->
 </html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
-<!-- <script>
-$(document).ready(function() 
-{
-    $('#submitquiz').on("submit",function(){
-        if(!$('.option').is(":checked"))
-        {
-            $('.error_append').text("Please Select option");
-            return false;
-        }
-        else
-        {
-            $('.error_append').text("");
-            return true;
-        }
-    });
-});
-</script> -->
 <script>
-    // $(document).on("submit",function() 
-    // {
-//     var $data = $('.option');
-//     alert($data);
-//     $('.option').change(function()
-//     {
-//         alert("cjs");
-//             $('input[name^="data\\["][name$="]"]').each(function(k,e){
-//             var opt = $(this).attr('name');
-//             var a = 'data['+k+'][answer]';
-//             var b= $(a).is("checked");
-//             if(!$(a).is("checked"))
-//             {
-//                 $('.error_append').text("Please Select option");
-//                 $('#submitQuiz').prop("disabled","disabled");
-//             }
-//             if($(a).is("checked"))
-//                 {
-//                 alert("yes");
-//                     $('.error_append').text("");
-//                     $('#submitQuiz').prop("disabled","");
-//                 }
-//             // else 
-//             // if(opt == 'data['+k+'][answer]')
-//         });
-        
-//     })
+$(document).ready(function(e) 
+{
+    var countertime = $('.countertime').val();
+    var a = countertime.split(':');
+    var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]); 
+    var min = a[2]/60 +(+a[1]);
+    var interval = setInterval(function()
+    {
+        seconds--;
+        if (seconds === 0)
+        {
+            clearInterval(interval);
+            $('#quizform').submit();
+            alert("Time is up!");
+        }
+    }, 1000);
     
-//   });
-  
+    function startTimer(duration, display) 
+    {
+        var start = Date.now(),
+        diff,
+        minutes,
+        seconds;
+        function timer() 
+        {
+            diff = duration - (((Date.now() - start) / 1000) | 0);
+            minutes = (diff / 60) | 0;
+            seconds = (diff % 60) | 0;
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds; 
+
+            if (diff <= 0) {
+                start = Date.now() + 1000;
+            }
+        };
+        timer();
+        setInterval(timer, 1000);
+    }
+
+    window.onload = function () {
+        var fiveMinutes = 60 * min,
+            display = document.querySelector('.end_time');
+        startTimer(fiveMinutes, display);
+    };
+    
+});
 </script>

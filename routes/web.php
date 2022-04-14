@@ -43,6 +43,8 @@ Route::group(['middleware' => 'Admin'],function()
     Route::post('addQuiz',[App\Http\Controllers\StaffMembers\QuizController::class,'addQuiz'])->name('addQuiz');
     
     Route::post('testStatus',[App\Http\Controllers\AjaxCallController::class,'testStatus'])->name('testStatus');
+    Route::post('searching',[App\Http\Controllers\AjaxCallController::class,'search'])->name('searchSUB');
+
 });
 
 Route::get('profile',[App\Http\Controllers\StaffAndStudent\LoginController::class,'profile'])->name('profile');

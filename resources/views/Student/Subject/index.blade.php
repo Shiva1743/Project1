@@ -43,8 +43,19 @@
                         </div>
                     </div>
                 </div>
+                
+                <div class="form-group row">
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control search" placeholder="Search by name">
+                    </div>
+                </div><br>
+                <div class="row searchdata">
+                    
+                    </div>
+                </div>
+                <div class="record"></div>
             <!-- end page title -->
-            <div class="row">
+            <div class="row removesearch">
                 @if(empty($subjectList->all()))
                 <div class="col-xl-12 col-sm-12">
                         <div class="card">
@@ -138,4 +149,43 @@
 
 <!-- Mirrored from themesbrand.com/skote-django/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 10 Jun 2021 11:18:48 GMT -->
 </html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+
+<script>
+    $(document).ready(function()
+    {
+        $(".search").on("keyup",function(e)
+        {
+            var text = $(this).val();
+            var rut = "{{route('searchSUB')}}";
+            $.ajax({
+                type:"POST",
+                url:rut,
+                data:{ 
+                    _token: "{{csrf_token()}}",
+                    name: text,
+                },
+                success:function(data){
+                    if(data)
+                    {
+                        $.each(data, function(index, value) {
+                            $subid = value.id;
+                            $('.searchdata').append('<div class="col-xl-4 col-sm-6"><div class="card border-success mb-3"><div class="card-body"><div class="media"><div class="avatar-md me-4"><span class="avatar-title rounded-circle bg-light text-danger font-size-16"><img src="assets/images/booksimage.jpg" alt="" height="70px" width="70px"  style="border-radius: 50%;"></span></div><div class="media-body overflow-hidden"><h1 class="text-truncate font-size-100"><a href="{{route("TestListS",["subID"=>'.$subid.'])}}" class="text-darkblue" id="task-name"> '+value.subName+' </a></h1></div></div></div><div class="px-4 py-3 border-top a"><ul class="list-inline mb-0"><li class="list-inline-item me-3"><h4><i class= "dripicons-code me-2"></i>SubjectCode:'+value.subNo+'</h4></li></ul></div></div></div>');
+                            $('.removesearch').remove();
+                        });
+                    }
+                    else(empty(data))
+                    {
+                        $(".record").html('<div">No Records found</div>');
+                        $('.removesearch').remove();
+                    }
+                }
+                
+            });
+        })
+        $(".search").focusout(function(e){
+            location.reload();
+        })
+    });
+</script>
 
