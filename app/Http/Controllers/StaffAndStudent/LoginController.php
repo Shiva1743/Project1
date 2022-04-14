@@ -35,7 +35,8 @@ class LoginController extends Controller
     public function profile(Request $request)
     {
         $getData = session::get('SessionData');
-        if(empty($getData)){
+        if(empty($getData))
+        {
             return redirect('loginportal');
         }
         $userData = User::where('id',$getData['userId'])->first();

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Test;
+use App\Models\Subject;
 
 class AjaxCallController extends Controller
 {
@@ -22,5 +23,10 @@ class AjaxCallController extends Controller
         }
         return back();
 
+    }
+    public function search(Request $request)
+    {
+        $subjectList = Subject::where('subName','LIKE','%'.$request->name.'%')->get();
+        return response()->json($subjectList);
     }
 }

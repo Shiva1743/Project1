@@ -1,7 +1,26 @@
 @include('layouts.header')
 <link href="assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css" />
 <link href="assets/libs/datatables.net-buttons-bs4/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css" />
-
+<style>
+    #profileImage
+    {
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+        display: block;
+        margin-left: 5%;
+        margin-right: auto;
+    }
+    #imageUpload
+    {
+        display: none;
+    }
+    #profileImage:hover
+    {
+        cursor: pointer;
+         filter: blur(8px);
+    }
+</style>
 @include('layouts.sidebar')
 <div class="main-content">
     <div class="page-content">
@@ -12,7 +31,7 @@
                 <div class="col-12">
                     <div class="page-title-box d-sm-flex align-items-center justify-content-between">
                         <h4 class="mb-sm-0 font-size-18">Your Profile</h4>
-
+                        
                         <div class="page-title-right">
                             <ol class="breadcrumb m-0">
                                 <li class="breadcrumb-item"><a href="javascript: void(0);">Your Profile/</a></li>
@@ -33,25 +52,28 @@
                                     {{ session()->get('status') }}
                                 </div>
                             @endif
+                            <img id="profileImage" src="{{asset('assets\defaultimg.png')}}" />
+                            <input id="imageUpload"class="profileimg" type="file" name="profile_photo" placeholder="Photo" required="" capture>
+                            <br>
                             <form action="{{route('profileupdate')}}" method="post">
                                 @csrf
                             <div class="mb-3 row">
                             <input type="hidden" name="userid" value="{{$userData->id}}">
                                 <label for="example-text-input" class="col-md-2 col-form-label">Name</label>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input class="form-control" type="text" name="name" value="{{$userData->name}}"
                                         id="example-text-input">
                                 </div>
                             </div>
                             <div class="mb-3 row">
                                 <label for="example-email-input" class="col-md-2 col-form-label">Email</label>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input class="form-control" type="email" value="{{$userData->email}}" placeholder="Enter Email"
                                         id="example-email-input" disabled>
                                 </div>
                             </div>
                             <div class="mb-3 row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input type="submit" class="btn btn-primary" value="submit">
                                 </div>
                             </div>
@@ -91,6 +113,7 @@
 <script src="assets/js/pages/datatables.init.js"></script>
 <!-- End Data tables -->
 
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> --}}
 <!-- App js -->
 <script src="assets/js/app.js"></script>
 </body>
@@ -99,5 +122,16 @@
 <!-- Mirrored from themesbrand.com/skote-django/layouts/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 6 Jun 2021 11:18:48 GMT -->
 </html>
 
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script> --}}
+<script>
+    
+    $(document).ready(function()
+    {
+        $("#profileImage").click(function(e) 
+        {
+            alert("323");
+            $("#imageUpload").click();
+        });
+    });
+
+</script>

@@ -31,12 +31,11 @@ class SubjectController extends Controller
     }
     public function index()
     {
-        $subjectList = Subject::paginate(9);
+        $subjectList = Subject::orderBy('id','desc')->paginate(9);
         return view('Student/Subject/index',compact('subjectList'));
     }
     public function testList(Request $request)
     {
-    
         $testList = Test::where('subID',$request->subID)->get();
         $attemptData = StudentScore::where('testID',$request->testID)->first();
         return view('Student/Test/index')->with(['testList'=>$testList]);
@@ -44,32 +43,48 @@ class SubjectController extends Controller
     public function quizIndex(Request $request)
     {
         $testID = $request->testID;
+        $time = Test::where('id',$request->testID)->first();
         $quizList = Quiz::where('testID',$request->testID)->get();
-        return view('Student/Quiz/index')->with(['quizList'=>$quizList,'testID'=>$testID]);
+        return view('Student/Quiz/index')->with(['time'=>$time,'quizList'=>$quizList,'testID'=>$testID]);
     }
     public function submitQuiz(Request $request)
     {
-        $array = [
-            "data"=>'required|array',
-            'data.*.answer'=>'required',
-         ];
-        $message = [
-            'data.*.answer.required' => "Please select option",
-        ];
+        // $array = [
+        //     "data"=>'required|array',
+        //     'data.*.answer'=>'required',
+        //  ];
+        // $message = [
+        //     'data.*.answer.required' => "Please select option",
+        // ];
         
-        $validator =  $this->validate($request,$array,$message);
+        // $validator =  $this->validate($request,$array,$message);
         
         $count = 0;
         $allData = $request->data;
         foreach($allData as $value)
         {   
-            $quizData = Quiz::where('testID',$request->testID)
+            if(empty($value['answer']))
+            {
+                $quizData = Quiz::where('testID',$request->testID)
+                        ->where('Q_srNo',$value['Q'])
+                        ->where('answer','xyz')->first();   
+                        if(!empty($quizData))
+                        {
+                            $count++;
+                        }   
+            }
+            else
+            {
+                $quizData = Quiz::where('testID',$request->testID)
                         ->where('Q_srNo',$value['Q'])
                         ->where('answer',$value['answer'])->first();
-            if(!empty($quizData))
-            {
-                $count++;
-            }   
+                if(!empty($quizData))
+                {
+                    $count++;
+                }
+            }
+            
+               
         }
         $score = $count;
         $storeResult = new StudentScore;
